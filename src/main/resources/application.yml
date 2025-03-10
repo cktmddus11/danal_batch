@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: restaurant-batch-application
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/restaurant?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000 # 30초
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 600000      # 600초
+      max-lifetime: 1800000     #
+
+  jpa:
+    hibernate:
+      ddl-auto: validate   # 테이블 및 컬럼 등이 있는지 확인만 함.
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: true # false로 설정 시 수동으로 Job 실행 가능
+      names: ${job.name:NONE} # 특정 Job만 실행할 경우 사용 (예: --job.name=restaurantJob)
+
+# 애플리케이션 설정
+danal:
+  batch:
+    chunk-size: 1000
+    input:
+      csv-file: classpath:data/csv/restaurant_temp_data.csv
+    thread-pool-size: 10
+    skip-limit: 100  # 최대 허용 오류 수
+
+logging:
+  level:
+    root: INFO
+    org.springframework.batch: INFO
+    danal.batch.restaurant: DEBUG

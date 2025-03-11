@@ -1,1 +1,0 @@
-package danal.batch.restaurant.restaurantdataloader.job.model;

@@ -1,4 +1,4 @@
-package danal.batch.restaurant.restaurantdataloader.config;
+package danal.batch.restaurant.config;
 
 import lombok.Getter;
 import lombok.Setter;

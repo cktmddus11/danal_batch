@@ -25,10 +25,11 @@ spring:
 
   batch:
     jdbc:
-      initialize-schema: always
+      initialize-schema: always  # always
     job:
       enabled: true # false로 설정 시 수동으로 Job 실행 가능
       names: ${job.name:NONE} # 특정 Job만 실행할 경우 사용 (예: --job.name=restaurantJob)
+      name: restaurant-data-loader
 
 # 애플리케이션 설정
 danal:

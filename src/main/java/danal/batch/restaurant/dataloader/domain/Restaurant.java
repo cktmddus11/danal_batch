@@ -1,21 +1,28 @@
-package danal.batch.restaurant.restaurantdataloader.domain;
+package danal.batch.restaurant.dataloader.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "restarant_info")
-public class Restaurant {
+public class Restaurant extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 자동 생성되는 고유 ID
+
+    @Column(name = "number", length = 100)
+    private Integer number; // 번호
 
     @Column(name = "service_name", length = 100)
     private String serviceName; // 개방서비스명
@@ -48,13 +55,13 @@ public class Restaurant {
     private String detailedBusinessStatus; // 상세영업상태명
 
     @Column(name = "closure_date")
-    private String closureDate; // 폐업일자
+    private LocalDate closureDate; // 폐업일자
 
     @Column(name = "suspension_start_date")
-    private String suspensionStartDate; // 휴업시작일자
+    private LocalDate suspensionStartDate; // 휴업시작일자
 
     @Column(name = "suspension_end_date")
-    private String suspensionEndDate; // 휴업종료일자
+    private LocalDate suspensionEndDate; // 휴업종료일자
 
     @Column(name = "reopening_date")
     private String reopeningDate; // 재개업일자

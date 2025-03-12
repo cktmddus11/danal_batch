@@ -8,11 +8,12 @@ import org.springframework.batch.core.JobExecutionListener;
 @Slf4j
 public abstract class RestaurantJobExecutionListener implements JobExecutionListener {
     protected abstract void customBeforeJob(JobExecution jobExecution);
+
     protected abstract void customAfterJob(JobExecution jobExecution);
 
     @Override
     public void beforeJob(JobExecution jobExecution) {
-        log.info("========= Job 시작: {} =========", jobExecution.getJobInstance().getJobName());
+        log.info("========= Job 시작: Job {}, JOB_ID : {} =========", jobExecution.getJobInstance().getJobName(), jobExecution.getJobId());
         log.info(">>> 파라미터: {}", jobExecution.getJobParameters());
         jobExecution.getExecutionContext().put("startTime", System.currentTimeMillis());
 

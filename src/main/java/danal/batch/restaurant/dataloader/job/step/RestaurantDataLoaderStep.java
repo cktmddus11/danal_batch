@@ -4,6 +4,7 @@ import danal.batch.restaurant.config.DataSourceConfig;
 import danal.batch.restaurant.dataloader.domain.Restaurant;
 import danal.batch.restaurant.dataloader.job.step.item.RestaurantCsvFileReader;
 import danal.batch.restaurant.dataloader.job.step.item.RestaurantDataCleansingProcessor;
+import danal.batch.restaurant.dataloader.job.step.item.RestaurantJdbcBatchItemWriter;
 import danal.batch.restaurant.listener.RestaurantDataLoaderStepSkipListener;
 import danal.batch.restaurant.meta.consts.BatchStrings;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.Map;
-
-import static danal.batch.restaurant.dataloader.job.RestaurantDataLoaderJob.BATCH_NAME;
 
 @RequiredArgsConstructor
 @Component
@@ -43,6 +42,7 @@ public class RestaurantDataLoaderStep {
 
     private final RestaurantCsvFileReader csvFileReader;
     private final RestaurantDataCleansingProcessor dataCleansingProcessor;
+    private final RestaurantJdbcBatchItemWriter restaurantJdbcBatchItemWriter;
     private final RestaurantDataLoaderStepSkipListener skipListener;
 
     @Bean(STEP_NAME + BatchStrings.STEP)
@@ -52,11 +52,12 @@ public class RestaurantDataLoaderStep {
                 .<Map<String, String>, Restaurant>chunk(chunkSize, transactionManager)
                 .reader(csvFileReader.flatFileReader())
                 .processor(dataCleansingProcessor)
-//                .writer(restaurantItemWriter())
+                .writer(restaurantJdbcBatchItemWriter.jdbcBatchItemWriter())
                 .faultTolerant()
                     .skipLimit(skipLimit)
                     .skip(Exception.class)
                     .listener(skipListener)
+                    .processorNonTransactional() // 데이터 처리 중에 특정 항목에서 예외가 발생했다면, 그 항목만 건너뛰고, 나머지 항목은 계속 처리. 안하면 chunk 단위로 싹다 롤백
 //                    .taskExecutor(taskExecutor)
 //                    .throttleLimit(10)
                 .build();

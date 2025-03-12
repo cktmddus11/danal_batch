@@ -50,7 +50,7 @@ public class DataSourceConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan("danal.batch.restaurant.**.repository");
+        em.setPackagesToScan("danal.batch.restaurant.**.domain"); // TODO 모듈 구조 변경시 변경 필요
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         return em;
     }

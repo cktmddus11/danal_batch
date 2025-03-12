@@ -21,7 +21,7 @@ public class RestaurantDataLoaderLog extends BaseEntity{
     private String fileName;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "file_name", length = 10)
+    @Column(name = "load_stus_cd", length = 10)
     private DataLoaderStatusCode loadStusCd;
 
 

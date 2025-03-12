@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+import static danal.batch.restaurant.dataloader.job.step.RestaurantDataLoaderStep.STEP_NAME;
+
 
 @Slf4j
 
@@ -21,7 +23,9 @@ public class RestaurantDataCleansingProcessor implements ItemProcessor<Map<Strin
 
     @Override
     public Restaurant process(Map<String, String> item) throws Exception {
-        log.info(">>> item : {}", item.toString());
+        log.info(">>> {} - Processor Start!", STEP_NAME);
+
+        log.info(">>> item id : {}, {}", item.get("번호"), MaskingUtils.sanitizeData(item).toString());
         try {
             Restaurant restaurant = Restaurant.builder()
                     .number(parseIntSafely(item.get("번호"), "번호"))

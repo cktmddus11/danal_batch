@@ -40,5 +40,12 @@ danal:
 logging:
   level:
     root: INFO
-    org.springframework.batch: INFO
+    org:
+      springframework:
+        batch: INFO
+        jdbc:
+         core: TRACE
+        transaction: TRACE
+        item:
+          database: DEBUG
     danal.batch.restaurant: DEBUG

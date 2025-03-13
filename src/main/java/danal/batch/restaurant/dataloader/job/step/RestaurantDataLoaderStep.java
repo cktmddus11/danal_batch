@@ -1,12 +1,13 @@
 package danal.batch.restaurant.dataloader.job.step;
 
 import danal.batch.restaurant.config.DataSourceConfig;
-import danal.batch.restaurant.dataloader.domain.Restaurant;
+import danal.batch.restaurant.dataloader.domain.entity.RestaurantEntity;
+import danal.batch.restaurant.dataloader.domain.vo.RestaurantVo;
 import danal.batch.restaurant.dataloader.job.step.item.RestaurantCsvFileReader;
 import danal.batch.restaurant.dataloader.job.step.item.RestaurantDataCleansingProcessor;
 import danal.batch.restaurant.dataloader.job.step.item.RestaurantJdbcBatchItemWriter;
 import danal.batch.restaurant.listener.RestaurantDataLoaderStepSkipListener;
-import danal.batch.restaurant.meta.consts.BatchStrings;
+import danal.batch.restaurant.meta.consts.BatchConstStrings;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobScope;
@@ -45,11 +46,11 @@ public class RestaurantDataLoaderStep {
     private final RestaurantJdbcBatchItemWriter restaurantJdbcBatchItemWriter;
     private final RestaurantDataLoaderStepSkipListener skipListener;
 
-    @Bean(STEP_NAME + BatchStrings.STEP)
+    @Bean(STEP_NAME + BatchConstStrings.STEP)
     @JobScope
     public Step step() {
         return new StepBuilder(STEP_NAME, jobRepository)
-                .<Map<String, String>, Restaurant>chunk(chunkSize, transactionManager)
+                .<Map<String, String>, RestaurantVo>chunk(chunkSize, transactionManager)
                 .reader(csvFileReader.flatFileReader())
                 .processor(dataCleansingProcessor)
                 .writer(restaurantJdbcBatchItemWriter.jdbcBatchItemWriter())

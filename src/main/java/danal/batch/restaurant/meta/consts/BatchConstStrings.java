@@ -1,6 +1,6 @@
 package danal.batch.restaurant.meta.consts;
 
-public class BatchStrings {
+public class BatchConstStrings {
     public final static String JOB = "-job";
     public final static String STEP = "-step";
     public final static String READER = "-item-reader";

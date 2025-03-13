@@ -1,17 +1,17 @@
 -- 데이터베이스 생성
-CREATE DATABASE IF NOT EXISTS restaurant CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE
+DATABASE IF NOT EXISTS restaurant_info CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE restaurant;
 
 -- 레스토랑 테이블 생성
 CREATE TABLE IF NOT EXISTS restaurant_info (
-                                          id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                          management_number VARCHAR(50) UNIQUE,
-    id INT,
+    id VARCHAR(11) PRIMARY KEY,
+    number VARCHAR(50) UNIQUE,
+    management_number VARCHAR(50) UNIQUE,
     service_name VARCHAR(100),
     service_id VARCHAR(100),
     city_code VARCHAR(20),
-    management_number varchar(50),
     license_date VARCHAR(20),
     license_cancel_date VARCHAR(20),
     business_status_code VARCHAR(20),
@@ -54,6 +54,10 @@ CREATE TABLE IF NOT EXISTS restaurant_info (
     traditional_designation_number VARCHAR(50),
     traditional_main_food VARCHAR(100),
     website VARCHAR(200),
+    created_at   DATETIME     NOT NULL,                   -- 생성일
+    updated_at   DATETIME,                                -- 수정일
+    created_by   VARCHAR(255),                            -- 생성자
+    updated_by   VARCHAR(255),                            -- 수정자
 
     INDEX idx_city_code (city_code),
     INDEX idx_business_status (business_status),
@@ -61,3 +65,30 @@ CREATE TABLE IF NOT EXISTS restaurant_info (
     INDEX idx_license_date (license_date),
     INDEX idx_closure_date (closure_date)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE restaurant_data_loader_log
+(
+    id           VARCHAR(11) PRIMARY KEY,       -- 고유 ID, 자동 생성
+    file_name    VARCHAR(255) NOT NULL,                   -- 파일명
+    load_stus_cd VARCHAR(50)  NOT NULL,                   -- 데이터 로드 상태 코드 (enum을 VARCHAR로 저장)
+    created_at   DATETIME     NOT NULL,                   -- 생성일
+    updated_at   DATETIME,                                -- 수정일
+    created_by   VARCHAR(255),                            -- 생성자
+    updated_by   VARCHAR(255)                            -- 수정자
+--     FOREIGN KEY (created_by) REFERENCES users (username), -- 예시로 users 테이블과 연결
+--     FOREIGN KEY (updated_by) REFERENCES users (username)  -- 예시로 users 테이블과 연결
+);
+
+CREATE TABLE batch_failure_log
+(
+    id            VARCHAR(11) PRIMARY KEY, -- 고유 ID
+    job_name      VARCHAR(255) NOT NULL,             -- 배치 작업 이름
+    step_name     VARCHAR(255) NOT NULL,             -- 배치 스텝 이름
+    job_id        BIGINT NOT NULL,
+    item_id       BIGINT,                            -- 실패한 항목의 ID (필요에 따라 추가)
+    item_data     TEXT,                              -- 실패한 항목의 데이터 (JSON이나 원본 데이터 저장 가능)
+    error_message VARCHAR(255),                      -- 오류 메시지
+    skip_reason   VARCHAR(255),                      -- 스킵된 이유
+    created_at   DATETIME     NOT NULL               -- 생성일
+);

@@ -1,4 +1,4 @@
-package danal.batch.restaurant.dataloader.domain;
+package danal.batch.restaurant.dataloader.domain.entity;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

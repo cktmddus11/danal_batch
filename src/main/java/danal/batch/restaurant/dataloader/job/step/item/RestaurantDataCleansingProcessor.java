@@ -1,9 +1,11 @@
 package danal.batch.restaurant.dataloader.job.step.item;
 
 
-import danal.batch.restaurant.dataloader.domain.Restaurant;
+import danal.batch.restaurant.dataloader.domain.entity.RestaurantEntity;
+import danal.batch.restaurant.dataloader.domain.vo.RestaurantVo;
 import danal.batch.restaurant.utils.DateTimeUtils;
 import danal.batch.restaurant.utils.MaskingUtils;
+import danal.batch.restaurant.utils.ShortUUIDUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -19,15 +21,16 @@ import static danal.batch.restaurant.dataloader.job.step.RestaurantDataLoaderSte
 
 @RequiredArgsConstructor
 @Component
-public class RestaurantDataCleansingProcessor implements ItemProcessor<Map<String, String>, Restaurant> {
+public class RestaurantDataCleansingProcessor implements ItemProcessor<Map<String, String>, RestaurantVo> {
 
     @Override
-    public Restaurant process(Map<String, String> item) throws Exception {
+    public RestaurantVo process(Map<String, String> item) throws Exception {
         log.info(">>> {} - Processor Start!", STEP_NAME);
 
         log.info(">>> item id : {}, {}", item.get("번호"), MaskingUtils.sanitizeData(item).toString());
         try {
-            Restaurant restaurant = Restaurant.builder()
+            RestaurantVo restaurantVo = RestaurantVo.builder()
+                    .id(ShortUUIDUtil.generateShortUUID())
                     .number(parseIntSafely(item.get("번호"), "번호"))
                     .serviceName(item.get("개방서비스명"))
                     .serviceId(item.get("개방서비스아이디"))
@@ -80,12 +83,12 @@ public class RestaurantDataCleansingProcessor implements ItemProcessor<Map<Strin
                     .build();
 
             // 데이터 무결성 검증
-            if (!restaurant.isValid()) {
+            if (!restaurantVo.isValid()) {
                 log.warn(">>> 유효하지 않은 레스토랑 데이터 항목: {}", MaskingUtils.sanitizeData(item));
                 return null; // null 반환 시 해당 항목은 건너뜀
             }
 
-            return restaurant;
+            return restaurantVo;
         } catch (Exception e) {
             String errorKey = e.getClass().getSimpleName();
 

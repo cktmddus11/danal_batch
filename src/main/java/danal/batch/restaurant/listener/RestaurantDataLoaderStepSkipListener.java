@@ -1,6 +1,6 @@
 package danal.batch.restaurant.listener;
 
-import danal.batch.restaurant.dataloader.domain.Restaurant;
+import danal.batch.restaurant.dataloader.domain.entity.RestaurantEntity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class RestaurantDataLoaderStepSkipListener implements SkipListener<Map<String, String>, Restaurant> {
+public class RestaurantDataLoaderStepSkipListener implements SkipListener<Map<String, String>, RestaurantEntity> {
     // 스레드 안전한 Queue
     private final Queue<Map<String, String>> skippedItems = new ConcurrentLinkedQueue<>();
 
@@ -32,7 +32,7 @@ public class RestaurantDataLoaderStepSkipListener implements SkipListener<Map<St
     }
 
     @Override
-    public void onSkipInWrite(Restaurant item, Throwable t) {
+    public void onSkipInWrite(RestaurantEntity item, Throwable t) {
 //        skippedItems.add(item);
         log.debug(">>> Item skipped in process: {} due to {}",item.toString(), t.getMessage());
 

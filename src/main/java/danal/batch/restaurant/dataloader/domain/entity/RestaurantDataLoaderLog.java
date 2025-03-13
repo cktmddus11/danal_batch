@@ -1,4 +1,4 @@
-package danal.batch.restaurant.dataloader.domain;
+package danal.batch.restaurant.dataloader.domain.entity;
 
 
 import danal.batch.restaurant.dataloader.job.model.type.DataLoaderStatusCode;

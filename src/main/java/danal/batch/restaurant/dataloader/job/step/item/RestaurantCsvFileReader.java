@@ -1,11 +1,10 @@
 package danal.batch.restaurant.dataloader.job.step.item;
 
-import danal.batch.restaurant.meta.consts.BatchStrings;
+import danal.batch.restaurant.meta.consts.BatchConstStrings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
@@ -35,7 +34,7 @@ public class RestaurantCsvFileReader{
     private final ResourceLoader resourceLoader;
 
 
-    @Bean(ITEM_READER_NAME + BatchStrings.READER)
+    @Bean(ITEM_READER_NAME + BatchConstStrings.READER)
     @StepScope
     public FlatFileItemReader<Map<String, String>> flatFileReader() {
         log.info(">>> {} - Reader Start!", STEP_NAME);
@@ -45,7 +44,7 @@ public class RestaurantCsvFileReader{
         DefaultLineMapper<Map<String, String>> lineMapper = getMapDefaultLineMapper(tokenizer);
 
         return new FlatFileItemReaderBuilder<Map<String, String>>()
-                .name(ITEM_READER_NAME+BatchStrings.READER)
+                .name(ITEM_READER_NAME+ BatchConstStrings.READER)
                 .resource( new ClassPathResource("data/csv/restaurant_temp_data.csv"))
                 .encoding(StandardCharsets.UTF_8.name())
                 .linesToSkip(1)

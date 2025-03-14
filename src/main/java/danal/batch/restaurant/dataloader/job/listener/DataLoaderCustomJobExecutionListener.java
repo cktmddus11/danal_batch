@@ -1,6 +1,6 @@
 package danal.batch.restaurant.dataloader.job.listener;
 
-import danal.batch.restaurant.listener.RestaurantJobExecutionListener;
+import danal.batch.restaurant.listener.CustomJobExecutionListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class DataLoaderJobExecutionListener extends RestaurantJobExecutionListener {
+public class DataLoaderCustomJobExecutionListener extends CustomJobExecutionListener {
 
     @Override
     protected void customBeforeJob(JobExecution jobExecution) {

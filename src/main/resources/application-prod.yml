@@ -35,17 +35,17 @@ danal:
     input:
       csv-file: data/csv/restaurant_temp_data.csv
     thread-pool-size: 10
-    skip-limit: 10 # 100  # 최대 허용 오류 수
+    skip-limit: 100  # 최대 허용 오류 수
 
 logging:
   level:
-    root: INFO
+    root: DEBUG
     org:
       springframework:
         batch: INFO
         jdbc:
-         core: TRACE
-        transaction: TRACE
+         core: INFO # TRACE
+        transaction: INFO # TRACE
         item:
-          database: INFO
+          database: DEBUG
     danal.batch.restaurant: DEBUG

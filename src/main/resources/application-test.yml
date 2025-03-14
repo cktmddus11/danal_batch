@@ -44,8 +44,8 @@ logging:
       springframework:
         batch: INFO
         jdbc:
-         core: TRACE
-        transaction: TRACE
+         core: DEBUG
+        transaction: DEBUG
         item:
           database: INFO
-    danal.batch.restaurant: DEBUG
+    danal.batch.restaurant: INFO

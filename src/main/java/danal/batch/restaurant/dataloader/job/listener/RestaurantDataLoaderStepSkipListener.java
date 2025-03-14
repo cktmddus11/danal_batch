@@ -1,6 +1,7 @@
-package danal.batch.restaurant.listener;
+package danal.batch.restaurant.dataloader.job.listener;
 
 import danal.batch.restaurant.dataloader.domain.entity.RestaurantEntity;
+import danal.batch.restaurant.utils.MaskingUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,15 @@ public class RestaurantDataLoaderStepSkipListener implements SkipListener<Map<St
     @Override
     public void onSkipInProcess(Map<String, String> item, Throwable t) {
         skippedItems.add(item);
+
         log.debug(">>> Item skipped in process: {} due to {}",item, t.getMessage());
+        String errorKey = t.getClass().getSimpleName();
+
+        // 안전하게 로그 기록 (민감 정보 마스킹)
+        log.error(">>> 항목 처리 오류: {}, 항목: {}, 오류: {}",
+                errorKey,
+                MaskingUtils.sanitizeData(item),
+                t.getMessage());
     }
 
     @Override

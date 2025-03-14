@@ -1,5 +1,6 @@
 package danal.batch.restaurant.dataloader.job.step.item;
 
+import danal.batch.restaurant.listener.CustomItemReaderListener;
 import danal.batch.restaurant.meta.consts.BatchConstStrings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,18 +27,19 @@ import static danal.batch.restaurant.dataloader.job.step.RestaurantDataLoaderSte
 @RequiredArgsConstructor
 @Slf4j
 @Component
-public class RestaurantCsvFileReader{
+public class RestaurantCsvFileReader {
 
     @Value("${danal.batch.input.csv-file}")
     private String csvFilePath;
 
     private final ResourceLoader resourceLoader;
 
+    private final CustomItemReaderListener<Map<String, String>> itemReaderListener;
 
     @Bean(ITEM_READER_NAME + BatchConstStrings.READER)
-    @StepScope
+    @StepScope // Step 실행 시점에 Bean이 생성, JobParameter 주입필요시
     public FlatFileItemReader<Map<String, String>> flatFileReader() {
-        log.info(">>> {} - Reader Start!", STEP_NAME);
+        log.debug(">>> {} - Reader Start!", STEP_NAME);
         //LineTokenizer 설정 (CSV 컬럼 구분)
         DelimitedLineTokenizer tokenizer = getDelimitedLineTokenizer();
         //FieldSetMapper 설정 (FieldSet → Map 변환)

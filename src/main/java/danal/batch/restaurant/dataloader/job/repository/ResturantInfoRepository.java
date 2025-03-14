@@ -4,6 +4,7 @@ import danal.batch.restaurant.config.JdbcConfig;
 import danal.batch.restaurant.dataloader.domain.vo.RestaurantVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -15,6 +16,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Component
 public class ResturantInfoRepository {
+
+    @Qualifier(JdbcConfig.JDBC_TEMPLATE)
+    private final JdbcTemplate jdbcTemplate;
+
 
     @Qualifier(JdbcConfig.NAMED_JDBC_TEMPLATE)
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -111,5 +116,9 @@ public class ResturantInfoRepository {
                 ":factoryProductionEmployeeCount, :buildingOwnershipType, :depositAmount, " +
                 ":monthlyRent, :multiUseBusinessYn, :facilityTotalScale, " +
                 ":traditionalDesignationNumber, :traditionalMainFood, :website)";
+    }
+    public void truncateResturantInfo(){
+        String sql = "TRUNCATE TABLE restaurant.restaurant_info";
+        jdbcTemplate.execute(sql);
     }
 }

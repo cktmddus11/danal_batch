@@ -1,4 +1,4 @@
-package danal.batch.restaurant.dataloader.domain.vo;
+package danal.batch.restaurant.dataloader.job.model.vo;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -108,6 +109,12 @@ public class RestaurantVo {
     private String traditionalMainFood; // 전통업소주된음식
 
     private String website; // 홈페이지
+
+    private String createBy;
+    private LocalDateTime createAt;
+
+    private String updateBy;
+    private LocalDateTime updateAt;
 
     // 데이터 무결성 검증 메서드
     public boolean isValid() {

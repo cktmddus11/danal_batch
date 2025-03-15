@@ -1,8 +1,7 @@
 package danal.batch.restaurant.dataloader.job.step;
 
 import danal.batch.restaurant.config.DataSourceConfig;
-import danal.batch.restaurant.dataloader.domain.vo.RestaurantVo;
-import danal.batch.restaurant.dataloader.job.listener.RestaurantDataLoaderItemReaderListener;
+import danal.batch.restaurant.dataloader.job.model.vo.RestaurantVo;
 import danal.batch.restaurant.dataloader.job.step.item.RestaurantCsvFileReader;
 import danal.batch.restaurant.dataloader.job.step.item.RestaurantDataCleansingProcessor;
 import danal.batch.restaurant.dataloader.job.step.item.RestaurantJdbcBatchItemWriter;
@@ -49,6 +48,7 @@ public class RestaurantDataLoaderStep {
     private final RestaurantDataLoaderStepSkipListener skipListener;
     private final CustomStepExecutionListener stepExecutionListener;
     private final CustomChunkListener chunkListener;
+
 
     @Bean(STEP_NAME + BatchConstStrings.STEP)
     @JobScope

@@ -1,20 +1,18 @@
 package danal.batch.restaurant.dataloader.job.step.item;
 
 
-import danal.batch.restaurant.dataloader.domain.entity.RestaurantEntity;
-import danal.batch.restaurant.dataloader.domain.vo.RestaurantVo;
+import danal.batch.restaurant.dataloader.job.model.vo.RestaurantVo;
 import danal.batch.restaurant.utils.DateTimeUtils;
 import danal.batch.restaurant.utils.MaskingUtils;
-import danal.batch.restaurant.utils.ShortUUIDUtil;
+import danal.batch.restaurant.utils.UniqueIdUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Map;
-
-import static danal.batch.restaurant.dataloader.job.step.RestaurantDataLoaderStep.STEP_NAME;
 
 
 @Slf4j
@@ -28,7 +26,7 @@ public class RestaurantDataCleansingProcessor implements ItemProcessor<Map<Strin
         log.debug(">>> item id : {}, {}", item.get("번호"), MaskingUtils.sanitizeData(item).toString());
 
         RestaurantVo restaurantVo = RestaurantVo.builder()
-                .id(ShortUUIDUtil.generateShortUUID())
+                .id(UniqueIdUtil.generateShortUUID())
                 .number(parseIntSafely(item.get("번호"), "번호"))
                 .serviceName(item.get("개방서비스명"))
                 .serviceId(item.get("개방서비스아이디"))
@@ -78,6 +76,9 @@ public class RestaurantDataCleansingProcessor implements ItemProcessor<Map<Strin
                 .traditionalDesignationNumber(item.get("전통업소지정번호"))
                 .traditionalMainFood(item.get("전통업소주된음식"))
                 .website(item.get("홈페이지"))
+
+                .createBy("BATCh")
+                .createAt(LocalDateTime.now())
                 .build();
 
         // 데이터 무결성 검증
@@ -85,7 +86,6 @@ public class RestaurantDataCleansingProcessor implements ItemProcessor<Map<Strin
             log.warn(">>> 유효하지 않은 레스토랑 데이터 항목: {}", MaskingUtils.sanitizeData(item));
             throw new RuntimeException("유효하지 않은 레스토랑 데이터");
         }
-
 
         return restaurantVo;
     }

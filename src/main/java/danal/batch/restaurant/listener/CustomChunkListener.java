@@ -12,7 +12,7 @@ public class CustomChunkListener implements ChunkListener {
     @Override
     public void beforeChunk(ChunkContext context) { // StepExecution은 빈이 아니라 실행 중에 동적으로 주어지는 값이므로 ChunkContext에서 가져와야함
         StepExecution stepExecution = context.getStepContext().getStepExecution();
-        log.info("=== Chunk 시작 ===", stepExecution.getStepName());
+        log.info("=== Chunk 시작 ===");
     }
 
     @Override

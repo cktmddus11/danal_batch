@@ -1,7 +1,7 @@
 package danal.batch.restaurant.dataloader.job.repository;
 
 import danal.batch.restaurant.config.JdbcConfig;
-import danal.batch.restaurant.dataloader.domain.vo.RestaurantVo;
+import danal.batch.restaurant.dataloader.job.model.vo.RestaurantVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -88,34 +88,41 @@ public class ResturantInfoRepository {
     }
 
     public String insertRestaurantInfoSql() {
-        return "INSERT INTO restaurant.restaurant_info (" +
-                "id, management_number, number, service_name, service_id, city_code, " +
-                "license_date, license_cancel_date, business_status_code, business_status, " +
-                "detailed_business_status_code, detailed_business_status, closure_date, " +
-                "suspension_start_date, suspension_end_date, reopening_date, phone_number, " +
-                "area, postal_code, address, road_address, road_postal_code, business_name, " +
-                "last_modified_time, data_update_type, data_update_date, business_type, " +
-                "coordinate_x, coordinate_y, sanitary_business_type, male_employee_count, " +
-                "female_employee_count, surrounding_classification, grade_classification, " +
-                "water_facility_type, total_employee_count, head_office_employee_count, " +
-                "factory_office_employee_count, factory_sales_employee_count, " +
-                "factory_production_employee_count, building_ownership_type, deposit_amount, " +
-                "monthly_rent, multi_use_business_yn, facility_total_scale, " +
-                "traditional_designation_number, traditional_main_food, website) " +
-                "VALUES (" +
-                ":id, :managementNumber, :number, :serviceName, :serviceId, :cityCode, " +
-                ":licenseDate, :licenseCancelDate, :businessStatusCode, :businessStatus, " +
-                ":detailedBusinessStatusCode, :detailedBusinessStatus, :closureDate, " +
-                ":suspensionStartDate, :suspensionEndDate, :reopeningDate, :phoneNumber, " +
-                ":area, :postalCode, :address, :roadAddress, :roadPostalCode, :businessName, " +
-                ":lastModifiedTime, :dataUpdateType, :dataUpdateDate, :businessType, " +
-                ":coordinateX, :coordinateY, :sanitaryBusinessType, :maleEmployeeCount, " +
-                ":femaleEmployeeCount, :surroundingClassification, :gradeClassification, " +
-                ":waterFacilityType, :totalEmployeeCount, :headOfficeEmployeeCount, " +
-                ":factoryOfficeEmployeeCount, :factorySalesEmployeeCount, " +
-                ":factoryProductionEmployeeCount, :buildingOwnershipType, :depositAmount, " +
-                ":monthlyRent, :multiUseBusinessYn, :facilityTotalScale, " +
-                ":traditionalDesignationNumber, :traditionalMainFood, :website)";
+        return
+                """
+                INSERT INTO restaurant.restaurant_info (
+                id, management_number, number, service_name, service_id, city_code, 
+                license_date, license_cancel_date, business_status_code, business_status, 
+                detailed_business_status_code, detailed_business_status, closure_date, 
+                suspension_start_date, suspension_end_date, reopening_date, phone_number, 
+                area, postal_code, address, road_address, road_postal_code, business_name, 
+                last_modified_time, data_update_type, data_update_date, business_type, 
+                coordinate_x, coordinate_y, sanitary_business_type, male_employee_count, 
+                female_employee_count, surrounding_classification, grade_classification, 
+                water_facility_type, total_employee_count, head_office_employee_count, 
+                factory_office_employee_count, factory_sales_employee_count, 
+                factory_production_employee_count, building_ownership_type, deposit_amount, 
+                monthly_rent, multi_use_business_yn, facility_total_scale, 
+                traditional_designation_number, traditional_main_food, website, 
+                created_at, updated_at, created_by, updated_by
+            ) 
+            VALUES (
+                :id, :managementNumber, :number, :serviceName, :serviceId, :cityCode, 
+                :licenseDate, :licenseCancelDate, :businessStatusCode, :businessStatus, 
+                :detailedBusinessStatusCode, :detailedBusinessStatus, :closureDate, 
+                :suspensionStartDate, :suspensionEndDate, :reopeningDate, :phoneNumber, 
+                :area, :postalCode, :address, :roadAddress, :roadPostalCode, :businessName, 
+                :lastModifiedTime, :dataUpdateType, :dataUpdateDate, :businessType, 
+                :coordinateX, :coordinateY, :sanitaryBusinessType, :maleEmployeeCount, 
+                :femaleEmployeeCount, :surroundingClassification, :gradeClassification, 
+                :waterFacilityType, :totalEmployeeCount, :headOfficeEmployeeCount, 
+                :factoryOfficeEmployeeCount, :factorySalesEmployeeCount, 
+                :factoryProductionEmployeeCount, :buildingOwnershipType, :depositAmount, 
+                :monthlyRent, :multiUseBusinessYn, :facilityTotalScale, 
+                :traditionalDesignationNumber, :traditionalMainFood, :website,
+                :createAt, :updateAt, :createBy, :updateBy
+            ) 
+                        """;
     }
     public void truncateResturantInfo(){
         String sql = "TRUNCATE TABLE restaurant.restaurant_info";

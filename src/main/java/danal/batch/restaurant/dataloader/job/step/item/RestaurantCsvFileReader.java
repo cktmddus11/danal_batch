@@ -1,18 +1,25 @@
 package danal.batch.restaurant.dataloader.job.step.item;
 
+import danal.batch.restaurant.dataloader.job.parameter.RestaurantJobParameter;
 import danal.batch.restaurant.listener.CustomItemReaderListener;
 import danal.batch.restaurant.meta.consts.BatchConstStrings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.repository.persistence.JobParameter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.item.file.transform.FieldSet;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
@@ -21,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import static danal.batch.restaurant.dataloader.job.RestaurantDataLoaderJob.BATCH_NAME;
 import static danal.batch.restaurant.dataloader.job.step.RestaurantDataLoaderStep.ITEM_READER_NAME;
 import static danal.batch.restaurant.dataloader.job.step.RestaurantDataLoaderStep.STEP_NAME;
 
@@ -29,17 +37,25 @@ import static danal.batch.restaurant.dataloader.job.step.RestaurantDataLoaderSte
 @Component
 public class RestaurantCsvFileReader {
 
-    @Value("${danal.batch.input.csv-file}")
-    private String csvFilePath;
-
     private final ResourceLoader resourceLoader;
 
     private final CustomItemReaderListener<Map<String, String>> itemReaderListener;
 
+/*    private String filePath;*/
+
+ /*   @BeforeStep
+    public void beforeStep(StepExecution stepExecution) {
+        this.filePath = (String) stepExecution.getJobParameters().getString("csvFilePath");
+    }
+*/
+
+    @Value("${danal.batch.input.csv-file}")
+    private String csvFilePath;
+
+
     @Bean(ITEM_READER_NAME + BatchConstStrings.READER)
     @StepScope // Step 실행 시점에 Bean이 생성, JobParameter 주입필요시
     public FlatFileItemReader<Map<String, String>> flatFileReader() {
-        log.debug(">>> {} - Reader Start!", STEP_NAME);
         //LineTokenizer 설정 (CSV 컬럼 구분)
         DelimitedLineTokenizer tokenizer = getDelimitedLineTokenizer();
         //FieldSetMapper 설정 (FieldSet → Map 변환)
@@ -47,7 +63,7 @@ public class RestaurantCsvFileReader {
 
         return new FlatFileItemReaderBuilder<Map<String, String>>()
                 .name(ITEM_READER_NAME+ BatchConstStrings.READER)
-                .resource( new ClassPathResource("data/csv/restaurant_temp_data.csv"))
+                .resource( new ClassPathResource(csvFilePath))
                 .encoding(StandardCharsets.UTF_8.name())
                 .linesToSkip(1)
                 .lineMapper(lineMapper)

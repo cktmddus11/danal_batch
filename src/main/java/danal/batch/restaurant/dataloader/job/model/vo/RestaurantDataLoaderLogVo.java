@@ -1,4 +1,4 @@
-package danal.batch.restaurant.dataloader.domain.vo;
+package danal.batch.restaurant.dataloader.job.model.vo;
 
 
 import danal.batch.restaurant.dataloader.domain.entity.BaseEntity;
@@ -12,12 +12,15 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
+/**
+ * 읽은 파일 로깅
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 public class RestaurantDataLoaderLogVo  {
-    private Long id; // 자동 생성되는 고유 ID
+    private String id; // 자동 생성되는 고유 ID
     private String fileName;
     private DataLoaderStatusCode loadStusCd;
 

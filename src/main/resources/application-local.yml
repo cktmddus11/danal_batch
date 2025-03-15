@@ -33,7 +33,7 @@ danal:
   batch:
     chunk-size: 1000
     input:
-      csv-file: data/csv/restaurant_temp_data.csv
+    #  csv-file: data/csv/restaurant_temp_data.csv # 동적인 파일명을 받기 위해 주석처리. 잡 파라미터로 처리
     thread-pool-size: 10
     skip-limit: 10 # 100  # 최대 허용 오류 수
 
@@ -44,8 +44,8 @@ logging:
       springframework:
         batch: INFO
         jdbc:
-         core: TRACE
-        transaction: TRACE
+         core: INFO # TRACE
+        transaction: INFO # TRACE
         item:
           database: INFO
     danal.batch.restaurant: DEBUG

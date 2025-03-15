@@ -2,8 +2,7 @@ package danal.batch.restaurant.dataloader.job.step.item;
 
 import danal.batch.restaurant.config.DataSourceConfig;
 import danal.batch.restaurant.config.JdbcConfig;
-import danal.batch.restaurant.dataloader.domain.entity.RestaurantEntity;
-import danal.batch.restaurant.dataloader.domain.vo.RestaurantVo;
+import danal.batch.restaurant.dataloader.job.model.vo.RestaurantVo;
 import danal.batch.restaurant.dataloader.job.repository.ResturantInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

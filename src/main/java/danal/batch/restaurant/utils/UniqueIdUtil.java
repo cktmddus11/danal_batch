@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.Base64;
 import java.util.UUID;
 
-public class ShortUUIDUtil {
+public class UniqueIdUtil {
 
     /**
      * 11자리 대문자로 변환된 짧은 UUID 생성

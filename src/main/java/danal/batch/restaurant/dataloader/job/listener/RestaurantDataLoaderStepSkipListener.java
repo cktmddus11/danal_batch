@@ -2,8 +2,8 @@ package danal.batch.restaurant.dataloader.job.listener;
 
 import danal.batch.restaurant.dataloader.job.model.vo.RestaurantSkipVo;
 import danal.batch.restaurant.dataloader.job.model.vo.RestaurantVo;
-import danal.batch.restaurant.utils.MaskingUtils;
-import danal.batch.restaurant.utils.UniqueIdUtil;
+import danal.batch.restaurant.comm.utils.MaskingUtils;
+import danal.batch.restaurant.comm.utils.UniqueIdUtil;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -59,36 +59,31 @@ CREATE TABLE IF NOT EXISTS restaurant_info (
     created_by   VARCHAR(255),                            -- 생성자
     updated_by   VARCHAR(255),                            -- 수정자
 
-    INDEX idx_city_code (city_code),
-    INDEX idx_business_status (business_status),
-    INDEX idx_business_type (business_type),
-    INDEX idx_license_date (license_date),
-    INDEX idx_closure_date (closure_date)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
-CREATE TABLE restaurant_data_loader_log
-(
-    id           VARCHAR(11) PRIMARY KEY,       -- 고유 ID, 자동 생성
-    file_name    VARCHAR(255) NOT NULL,                   -- 파일명
-    load_stus_cd VARCHAR(50)  NOT NULL,                   -- 데이터 로드 상태 코드 (enum을 VARCHAR로 저장)
-    created_at   DATETIME     NOT NULL,                   -- 생성일
-    updated_at   DATETIME,                                -- 수정일
-    created_by   VARCHAR(255),                            -- 생성자
-    updated_by   VARCHAR(255)                            -- 수정자
---     FOREIGN KEY (created_by) REFERENCES users (username), -- 예시로 users 테이블과 연결
---     FOREIGN KEY (updated_by) REFERENCES users (username)  -- 예시로 users 테이블과 연결
-);
-
-CREATE TABLE batch_failure_log
-(
-    id            VARCHAR(11) PRIMARY KEY, -- 고유 ID
-    job_name      VARCHAR(255) NOT NULL,             -- 배치 작업 이름
-    step_name     VARCHAR(255) NOT NULL,             -- 배치 스텝 이름
-    job_id        BIGINT NOT NULL,
-    item_id       BIGINT,                            -- 실패한 항목의 ID (필요에 따라 추가)
-    item_data     TEXT,                              -- 실패한 항목의 데이터 (JSON이나 원본 데이터 저장 가능)
-    error_message VARCHAR(255),                      -- 오류 메시지
-    skip_reason   VARCHAR(255),                      -- 스킵된 이유
-    created_at   DATETIME     NOT NULL               -- 생성일
-);
+--
+--
+-- CREATE TABLE restaurant_data_loader_log
+-- (
+--     id           VARCHAR(11) PRIMARY KEY,       -- 고유 ID, 자동 생성
+--     file_name    VARCHAR(255) NOT NULL,                   -- 파일명
+--     load_stus_cd VARCHAR(50)  NOT NULL,                   -- 데이터 로드 상태 코드 (enum을 VARCHAR로 저장)
+--     created_at   DATETIME     NOT NULL,                   -- 생성일
+--     updated_at   DATETIME,                                -- 수정일
+--     created_by   VARCHAR(255),                            -- 생성자
+--     updated_by   VARCHAR(255)                            -- 수정자
+-- --     FOREIGN KEY (created_by) REFERENCES users (username), -- 예시로 users 테이블과 연결
+-- --     FOREIGN KEY (updated_by) REFERENCES users (username)  -- 예시로 users 테이블과 연결
+-- );
+--
+-- CREATE TABLE batch_failure_log
+-- (
+--     id            VARCHAR(11) PRIMARY KEY, -- 고유 ID
+--     job_name      VARCHAR(255) NOT NULL,             -- 배치 작업 이름
+--     step_name     VARCHAR(255) NOT NULL,             -- 배치 스텝 이름
+--     job_id        BIGINT NOT NULL,
+--     item_id       BIGINT,                            -- 실패한 항목의 ID (필요에 따라 추가)
+--     item_data     TEXT,                              -- 실패한 항목의 데이터 (JSON이나 원본 데이터 저장 가능)
+--     error_message VARCHAR(255),                      -- 오류 메시지
+--     skip_reason   VARCHAR(255),                      -- 스킵된 이유
+--     created_at   DATETIME     NOT NULL               -- 생성일
+-- );

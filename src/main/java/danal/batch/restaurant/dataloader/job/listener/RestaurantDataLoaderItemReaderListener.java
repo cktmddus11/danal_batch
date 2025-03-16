@@ -1,6 +1,6 @@
 package danal.batch.restaurant.dataloader.job.listener;
 
-import danal.batch.restaurant.listener.CustomItemReaderListener;
+import danal.batch.restaurant.comm.listener.CustomItemReaderListener;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

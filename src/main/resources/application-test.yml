@@ -36,7 +36,7 @@ danal:
     #  csv-file: data/csv/restaurant_temp_data.csv # 동적인 파일명을 받기 위해 주석처리. 잡 파라미터로 처리
       csv-file: C:\Users\차승연\Downloads\07_24_04_P_CSV\fulldata_07_24_04_P_일반음식점.csv # data/csv/restaurant_temp_skip10_data.csv # data/csv/restaurant_temp_data.csv
     thread-pool-size: 10
-    skip-limit: 10 # 100  # 최대 허용 오류 수
+    skip-limit: 100 # 100  # 최대 허용 오류 수
 
 logging:
   level:

@@ -1,4 +1,4 @@
-package danal.batch.restaurant.listener;
+package danal.batch.restaurant.comm.listener;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.BatchStatus;

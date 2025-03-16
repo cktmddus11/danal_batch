@@ -1,4 +1,4 @@
-package danal.batch.restaurant.runnicrementer;
+package danal.batch.restaurant.comm.runnicrementer;
 
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;

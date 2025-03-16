@@ -1,4 +1,4 @@
-package danal.batch.restaurant.utils;
+package danal.batch.restaurant.comm.utils;
 
 import java.nio.ByteBuffer;
 import java.util.Base64;

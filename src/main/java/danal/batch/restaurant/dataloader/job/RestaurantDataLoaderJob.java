@@ -1,18 +1,13 @@
 package danal.batch.restaurant.dataloader.job;
 
 import danal.batch.restaurant.dataloader.job.listener.DataLoaderCustomJobExecutionListener;
-import danal.batch.restaurant.dataloader.job.parameter.RestaurantJobParameter;
 import danal.batch.restaurant.dataloader.job.step.RestaurantChunkStep;
 import danal.batch.restaurant.dataloader.job.step.RestaurantDataLoaderStep;
 import danal.batch.restaurant.dataloader.job.step.RestaurantTruncateTableStep;
-import danal.batch.restaurant.dataloader.job.valid.RestaurantJobParameterValidator;
-import danal.batch.restaurant.meta.consts.BatchConstStrings;
-import danal.batch.restaurant.runnicrementer.CustomRunIdIncrementer;
+import danal.batch.restaurant.comm.meta.consts.BatchConstStrings;
+import danal.batch.restaurant.comm.runnicrementer.CustomRunIdIncrementer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobScope;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.partition.support.Partitioner;
 import org.springframework.batch.core.repository.JobRepository;

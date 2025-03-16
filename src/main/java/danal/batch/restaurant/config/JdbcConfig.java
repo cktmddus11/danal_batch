@@ -1,6 +1,6 @@
 package danal.batch.restaurant.config;
 
-import danal.batch.restaurant.meta.consts.DbConstStrings;
+import danal.batch.restaurant.comm.meta.consts.DbConstStrings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;

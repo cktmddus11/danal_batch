@@ -2,12 +2,8 @@ package danal.batch.restaurant.dataloader;
 
 import danal.batch.restaurant.config.JdbcConfig;
 import danal.batch.restaurant.dataloader.job.RestaurantDataLoaderJob;
-import danal.batch.restaurant.dataloader.job.model.vo.RestaurantVo;
 import danal.batch.restaurant.dataloader.job.step.item.RestaurantJdbcBatchItemWriter;
-import danal.batch.restaurant.meta.consts.BatchConstStrings;
-import org.apache.commons.lang3.ObjectUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
+import danal.batch.restaurant.comm.meta.consts.BatchConstStrings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.batch.core.*;
@@ -16,14 +12,9 @@ import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 

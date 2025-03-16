@@ -1,15 +1,10 @@
 package danal.batch.restaurant.dataloader.job.step.item;
 
 import danal.batch.restaurant.dataloader.job.step.RestaurantChunkStep;
-import danal.batch.restaurant.listener.CustomItemReaderListener;
-import danal.batch.restaurant.meta.consts.BatchConstStrings;
+import danal.batch.restaurant.comm.meta.consts.BatchConstStrings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
-import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
@@ -28,7 +23,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static danal.batch.restaurant.dataloader.job.RestaurantDataLoaderJob.BATCH_NAME;
 import static danal.batch.restaurant.dataloader.job.step.RestaurantChunkStep.ITEM_READER_NAME;
 
 @RequiredArgsConstructor

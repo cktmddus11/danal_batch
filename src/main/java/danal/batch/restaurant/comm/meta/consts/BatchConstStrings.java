@@ -1,4 +1,4 @@
-package danal.batch.restaurant.meta.consts;
+package danal.batch.restaurant.comm.meta.consts;
 
 public class BatchConstStrings {
     public final static String JOB = "-job";

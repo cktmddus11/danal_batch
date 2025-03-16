@@ -1,20 +1,18 @@
 package danal.batch.restaurant.dataloader.job.step;
 
 import danal.batch.restaurant.config.DataSourceConfig;
-import danal.batch.restaurant.dataloader.job.listener.CustomStepExecutionListener;
 import danal.batch.restaurant.dataloader.job.listener.RestaurantDataLoaderStepSkipListener;
 import danal.batch.restaurant.dataloader.job.model.vo.RestaurantVo;
 import danal.batch.restaurant.dataloader.job.step.item.RestaurantDataCleansingProcessor;
 import danal.batch.restaurant.dataloader.job.step.item.RestaurantJdbcBatchItemWriter;
-import danal.batch.restaurant.listener.CustomChunkListener;
-import danal.batch.restaurant.meta.consts.BatchConstStrings;
+import danal.batch.restaurant.comm.listener.CustomChunkListener;
+import danal.batch.restaurant.comm.meta.consts.BatchConstStrings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.support.SynchronizedItemStreamReader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,7 +67,8 @@ public class RestaurantChunkStep {
                 .processor(dataCleansingProcessor)
                 .writer(restaurantJdbcBatchItemWriter.jdbcBatchItemWriter())
                 .allowStartIfComplete(true)
-              //  .listener(chunkListener) // chunk 리스너
+
+                .listener(chunkListener) // chunk 리스너
                 .faultTolerant()
                     .skipLimit(skipLimit)
                     .skip(Exception.class)

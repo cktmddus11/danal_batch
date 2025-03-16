@@ -1,14 +1,8 @@
 package danal.batch.restaurant.dataloader.job.step;
 
-import danal.batch.restaurant.config.DataSourceConfig;
 import danal.batch.restaurant.dataloader.job.listener.CustomStepExecutionListener;
-import danal.batch.restaurant.dataloader.job.model.vo.RestaurantVo;
 import danal.batch.restaurant.dataloader.job.partitioner.RangePartitioner;
-import danal.batch.restaurant.dataloader.job.step.item.RestaurantDataCleansingProcessor;
-import danal.batch.restaurant.dataloader.job.step.item.RestaurantJdbcBatchItemWriter;
-import danal.batch.restaurant.dataloader.job.listener.RestaurantDataLoaderStepSkipListener;
-import danal.batch.restaurant.listener.*;
-import danal.batch.restaurant.meta.consts.BatchConstStrings;
+import danal.batch.restaurant.comm.meta.consts.BatchConstStrings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Step;
@@ -16,20 +10,15 @@ import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.partition.support.Partitioner;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.PlatformTransactionManager;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.util.Map;
 
 import static danal.batch.restaurant.dataloader.job.step.RestaurantChunkStep.WORKER_STEP_NAME;
 

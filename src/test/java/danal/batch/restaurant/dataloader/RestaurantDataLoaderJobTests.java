@@ -2,10 +2,7 @@ package danal.batch.restaurant.dataloader;
 
 import danal.batch.restaurant.config.JdbcConfig;
 import danal.batch.restaurant.dataloader.job.RestaurantDataLoaderJob;
-import danal.batch.restaurant.dataloader.job.model.vo.RestaurantVo;
-import danal.batch.restaurant.meta.consts.BatchConstStrings;
-import org.apache.commons.lang3.ObjectUtils;
-import org.junit.jupiter.api.BeforeEach;
+import danal.batch.restaurant.comm.meta.consts.BatchConstStrings;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

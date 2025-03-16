@@ -1,27 +1,27 @@
 package danal.batch.restaurant.dataloader.job.step.item;
 
-import danal.batch.restaurant.dataloader.job.parameter.RestaurantJobParameter;
+import danal.batch.restaurant.dataloader.job.step.RestaurantChunkStep;
 import danal.batch.restaurant.listener.CustomItemReaderListener;
 import danal.batch.restaurant.meta.consts.BatchConstStrings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.core.repository.persistence.JobParameter;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.item.file.transform.FieldSet;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.batch.item.support.SynchronizedItemStreamReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -29,50 +29,79 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static danal.batch.restaurant.dataloader.job.RestaurantDataLoaderJob.BATCH_NAME;
-import static danal.batch.restaurant.dataloader.job.step.RestaurantDataLoaderStep.ITEM_READER_NAME;
-import static danal.batch.restaurant.dataloader.job.step.RestaurantDataLoaderStep.STEP_NAME;
+import static danal.batch.restaurant.dataloader.job.step.RestaurantChunkStep.ITEM_READER_NAME;
 
 @RequiredArgsConstructor
 @Slf4j
 @Component
 public class RestaurantCsvFileReader {
 
-    private final ResourceLoader resourceLoader;
+    /*  private final ResourceLoader resourceLoader;
+     */
 
-    private final CustomItemReaderListener<Map<String, String>> itemReaderListener;
+    /*    private String filePath;*/
 
-/*    private String filePath;*/
-
- /*   @BeforeStep
-    public void beforeStep(StepExecution stepExecution) {
-        this.filePath = (String) stepExecution.getJobParameters().getString("csvFilePath");
-    }
-*/
-
+    /*   @BeforeStep
+       public void beforeStep(StepExecution stepExecution) {
+           this.filePath = (String) stepExecution.getJobParameters().getString("csvFilePath");
+       }
+   */
     @Value("${danal.batch.input.csv-file}")
     private String csvFilePath;
 
 
     @Bean(ITEM_READER_NAME + BatchConstStrings.READER)
     @StepScope // Step 실행 시점에 Bean이 생성, JobParameter 주입필요시
-    public FlatFileItemReader<Map<String, String>> flatFileReader() {
+    public SynchronizedItemStreamReader<Map<String, String>> partitionedReader(
+            @Value("#{stepExecutionContext[startIndex]}") Long startIndex,
+            @Value("#{stepExecutionContext[endIndex]}") Long endIndex
+    //                                                                @Value("#{jobParameters['csvFilePath']}") String csvFilePath
+    ) {
+        log.info(">>> {} - Creating reader with startIndex={}, endIndex={}", RestaurantChunkStep.WORKER_STEP_NAME, startIndex, endIndex);
+
         //LineTokenizer 설정 (CSV 컬럼 구분)
         DelimitedLineTokenizer tokenizer = getDelimitedLineTokenizer();
         //FieldSetMapper 설정 (FieldSet → Map 변환)
         DefaultLineMapper<Map<String, String>> lineMapper = getMapDefaultLineMapper(tokenizer);
 
-        return new FlatFileItemReaderBuilder<Map<String, String>>()
-                .name(ITEM_READER_NAME+ BatchConstStrings.READER)
-                .resource( new ClassPathResource(csvFilePath))
+        FlatFileItemReader<Map<String, String>> delegate = new FlatFileItemReaderBuilder<Map<String, String>>()
+                .name(ITEM_READER_NAME + BatchConstStrings.READER)
+                .resource(setResource())
                 .encoding(StandardCharsets.UTF_8.name())
-                .linesToSkip(1)
-                .lineMapper(lineMapper)
+                .linesToSkip(startIndex.intValue())
+                .lineMapper(getMapDefaultLineMapper(getDelimitedLineTokenizer()))
                 .build();
+
+
+        if (startIndex != null && endIndex != null) {
+            int itemCount = endIndex.intValue() - startIndex.intValue() + 1;
+            delegate.setMaxItemCount(itemCount);
+        }
+
+        // 동기화된 reader 생성 및 delegate 설정
+        SynchronizedItemStreamReader<Map<String, String>> synchronizedReader = new SynchronizedItemStreamReader<>();
+        synchronizedReader.setDelegate(delegate);
+
+        return synchronizedReader;
+    }
+
+    private Resource setResource() {
+        Resource resource;
+        // 'classpath:' 접두사가 있으면 ClassPathResource 사용, 'file:' 접두사가 있으면 FileSystemResource 사용
+        if (csvFilePath.startsWith("classpath:")) {
+            resource = new ClassPathResource(csvFilePath.substring("classpath:".length()));
+        } else if (csvFilePath.startsWith("file:")) {
+            resource = new FileSystemResource(csvFilePath.substring("file:".length()));
+        } else {
+            // 기본적으로 file 경로로 처리
+            resource = new FileSystemResource(csvFilePath);
+        }
+        return resource;
     }
 
     /*
-    * FieldSetMapper 설정 (FieldSet → Map 변환)
-    * */
+     * FieldSetMapper 설정 (FieldSet → Map 변환)
+     * */
     private static DefaultLineMapper<Map<String, String>> getMapDefaultLineMapper(DelimitedLineTokenizer tokenizer) {
         DefaultLineMapper<Map<String, String>> lineMapper = new DefaultLineMapper<>();
         lineMapper.setLineTokenizer(tokenizer);
@@ -92,8 +121,8 @@ public class RestaurantCsvFileReader {
     }
 
     /*
-    * LineTokenizer 설정 (CSV 컬럼 구분)
-    */
+     * LineTokenizer 설정 (CSV 컬럼 구분)
+     */
     private static DelimitedLineTokenizer getDelimitedLineTokenizer() {
         DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer(",");
         tokenizer.setNames(FIELD_NAMES);

@@ -10,6 +10,5 @@ public class BatchConstStrings {
 
     public static final String SKIP_LISTENER = "skip-listener";
     public static final String EXECUTION_LISTENER = "execution-listener";
-
-
+    public static final String TASK_EXECUTOR = "danal_task_executor";
 }

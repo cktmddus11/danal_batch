@@ -1,34 +1,44 @@
 package danal.batch.restaurant.dataloader.job.step;
 
 import danal.batch.restaurant.config.DataSourceConfig;
+import danal.batch.restaurant.dataloader.job.listener.CustomStepExecutionListener;
 import danal.batch.restaurant.dataloader.job.model.vo.RestaurantVo;
-import danal.batch.restaurant.dataloader.job.step.item.RestaurantCsvFileReader;
+import danal.batch.restaurant.dataloader.job.partitioner.RangePartitioner;
 import danal.batch.restaurant.dataloader.job.step.item.RestaurantDataCleansingProcessor;
 import danal.batch.restaurant.dataloader.job.step.item.RestaurantJdbcBatchItemWriter;
 import danal.batch.restaurant.dataloader.job.listener.RestaurantDataLoaderStepSkipListener;
 import danal.batch.restaurant.listener.*;
 import danal.batch.restaurant.meta.consts.BatchConstStrings;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobScope;
+import org.springframework.batch.core.partition.support.Partitioner;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.Map;
 
+import static danal.batch.restaurant.dataloader.job.step.RestaurantChunkStep.WORKER_STEP_NAME;
+
+
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class RestaurantDataLoaderStep {
-    public static final String STEP_NAME = "restaurant-data-loader-chunk";
-    public static final String ITEM_READER_NAME = "restaurant-csv-file";
-//    public static final String ITEM_PROCESSOR_NAME = "restaurant-data-cleansing";
-//    public static final String ITEM_WRITER_NAME = "restaurant_writer";
-
+    public static final String MASTER_STEP_NAME = "restaurant-data-loader-chunk-master";
 
     @Value("${danal.batch.chunk-size}")
     private int chunkSize;
@@ -36,41 +46,58 @@ public class RestaurantDataLoaderStep {
     @Value("${danal.batch.skip-limit}")
     private int skipLimit;
 
-    @Qualifier(DataSourceConfig.TX_MANAGER_BEAN_NAME)
-    private final PlatformTransactionManager transactionManager;
 
     private final JobRepository jobRepository;
 
-    private final RestaurantCsvFileReader csvFileReader;
-    private final RestaurantDataCleansingProcessor dataCleansingProcessor;
-    private final RestaurantJdbcBatchItemWriter restaurantJdbcBatchItemWriter;
-
-    private final RestaurantDataLoaderStepSkipListener skipListener;
     private final CustomStepExecutionListener stepExecutionListener;
-    private final CustomChunkListener chunkListener;
+
+    private final static int GRID_SIZE = 5;
+
+    @Qualifier(BatchConstStrings.TASK_EXECUTOR)
+    private final TaskExecutor taskExecutor;
 
 
-    @Bean(STEP_NAME + BatchConstStrings.STEP)
+    @Value("${danal.batch.input.csv-file}")
+    private String csvFilePath; // TODO 잡 파람으로 변경
+
+//    private final RestaurantChunkStep restaurantChunkStep;
+
+    /**
+     * CSV 파일 라인 수를 세어 파티셔너 생성
+     */
     @JobScope
-    public Step step() {
-        return new StepBuilder(STEP_NAME, jobRepository)
-                .<Map<String, String>, RestaurantVo>chunk(chunkSize, transactionManager)
-                .reader(csvFileReader.flatFileReader())
-                .processor(dataCleansingProcessor)
-                .writer(restaurantJdbcBatchItemWriter.jdbcBatchItemWriter())
-                .allowStartIfComplete(true)
-                .listener(stepExecutionListener) // step 리스너
-                .listener(chunkListener) // chunk 시작 전후'
-                .faultTolerant()
-                    .skipLimit(skipLimit)
-                    .skip(Exception.class)
-                    .listener(skipListener)
-                    .processorNonTransactional() // 데이터 처리 중에 특정 항목에서 예외가 발생했다면, 그 항목만 건너뛰고, 나머지 항목은 계속 처리. 안하면 chunk 단위로 싹다 롤백
-//                    .taskExecutor(taskExecutor)
-//                    .throttleLimit(10)
-                .build();
-
+    @Bean(MASTER_STEP_NAME + "Partitioner")
+    public Partitioner partitioner() {
+        long totalCount = 0;
+        try (LineNumberReader reader = new LineNumberReader(new FileReader(csvFilePath))) {
+            // 파일의 끝까지 빠르게 스킵
+            reader.skip(Long.MAX_VALUE);
+            // 헤더 한 줄 제외
+            totalCount = reader.getLineNumber() - 1;
+            log.info(">>> CSV totalCount: {}", totalCount);
+        } catch (IOException e) {
+            log.error(">>> CSV 파일 읽기 오류: {}", e.getMessage(), e);
+            throw new RuntimeException("CSV 파일 라인 수 세는 중 오류 발생", e);
+        }
+        return new RangePartitioner(totalCount, GRID_SIZE);
     }
 
-
+    /**
+     * 마스터 스텝 정의 - 파티셔닝을 위한 설정
+     * 주요 변경: 의존성 주입을 통해 Bean 메소드 직접 호출 방지
+     */
+    @Bean(MASTER_STEP_NAME + BatchConstStrings.STEP)
+    @JobScope
+    public Step masterStep(
+            @Qualifier(WORKER_STEP_NAME + BatchConstStrings.STEP) Step workerStep,
+            @Qualifier(MASTER_STEP_NAME + "Partitioner") Partitioner partitioner
+    ) {
+        return new StepBuilder(MASTER_STEP_NAME, jobRepository)
+                .partitioner(WORKER_STEP_NAME, partitioner)  // 의존성 주입된 partitioner 사용
+                .step(workerStep)  // 의존성 주입된 workerStep 사용
+                .gridSize(GRID_SIZE)
+                .taskExecutor(taskExecutor)
+                .listener(stepExecutionListener)
+                .build();
+    }
 }

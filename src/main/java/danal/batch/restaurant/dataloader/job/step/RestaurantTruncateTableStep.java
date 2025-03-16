@@ -2,7 +2,7 @@ package danal.batch.restaurant.dataloader.job.step;
 
 import danal.batch.restaurant.config.DataSourceConfig;
 import danal.batch.restaurant.dataloader.job.repository.ResturantInfoRepository;
-import danal.batch.restaurant.listener.CustomStepExecutionListener;
+import danal.batch.restaurant.dataloader.job.listener.CustomStepExecutionListener;
 import danal.batch.restaurant.meta.consts.BatchConstStrings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -5,11 +5,11 @@ spring:
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
-      connection-timeout: 30000 # 30초
-      maximum-pool-size: 10
-      minimum-idle: 5
-      idle-timeout: 600000      # 600초
-      max-lifetime: 1800000     #
+      connection-timeout: 30000 # 30초  # 커넥션 풀에서 커넥션을 얻기 위한 최대 대기시간 30초
+      maximum-pool-size: 10             # 커넥션 풀의 최대 커넥션 수 10      | # DB와 네트워크 상황을 고려해서 max-pool-size를 executor pool size + α로 맞추기도 함
+      minimum-idle: 5                   # 최소 유휴 커넥션 수 5
+      idle-timeout: 600000 # 600초      # 커넥션이 풀에서 제거되기까지 대기 시간 10분
+      max-lifetime: 1800000 # 1800초            # 커넥션이 제거되기까지 최대 생명 주기 30분
 
   jpa:
     hibernate:
@@ -34,8 +34,8 @@ danal:
     chunk-size: 1000
     input:
     #  csv-file: data/csv/restaurant_temp_data.csv # 동적인 파일명을 받기 위해 주석처리. 잡 파라미터로 처리
-    thread-pool-size: 10
-    skip-limit: 10 # 100  # 최대 허용 오류 수
+    thread-pool-size: 12
+    skip-limit: 100 # 100  # 최대 허용 오류 수 # 배치별 업무 특성상 다르게 설정가능.
 
 logging:
   level:

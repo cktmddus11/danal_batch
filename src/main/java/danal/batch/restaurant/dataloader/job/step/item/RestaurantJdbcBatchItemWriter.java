@@ -16,7 +16,8 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 
-import static danal.batch.restaurant.dataloader.job.step.RestaurantDataLoaderStep.STEP_NAME;
+import static danal.batch.restaurant.dataloader.job.step.RestaurantChunkStep.WORKER_STEP_NAME;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class RestaurantJdbcBatchItemWriter {
 
     @Bean
     public JdbcBatchItemWriter<RestaurantVo> jdbcBatchItemWriter() {
-        log.info(">>> {} - Writer Start!", STEP_NAME);
+        log.info(">>> {} - Writer Create!", WORKER_STEP_NAME);
 
         JdbcBatchItemWriter<RestaurantVo> writer = new JdbcBatchItemWriterBuilder<RestaurantVo>()
                 .dataSource(dataSource)

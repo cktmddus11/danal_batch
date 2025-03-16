@@ -1,10 +1,3 @@
-### 주기
-- 월 말 최신화
-- 업무적으로는 trucate insert 가 나을것같지만 데이터가 커질때를 생각하면...
-- 있으면 update를 쳐야하나싶기두
-- 일단은 chunk 처리 방식을 보는 과제인거같아서 단순하게 처리. 읽고 처리하고 쓰기 순.
-
-
 
 # 테스트 환경
 - 프로세서	Intel(R) Core(TM) 5 120U, 1400Mhz, 10 코어, 12 논리 프로세서
@@ -47,7 +40,12 @@
 파티션 증가로 CPU 사용률을 향상시키며 병렬 처리 효율 극대화
 ```
 
-
+## 성능 최적화
+이 애플리케이션은 다음과 같은 방법으로 성능을 최적화했습니다:
+1. **청크 기반 처리**: 큰 데이터셋을 작은 청크로 나누어 처리하여 메모리 사용 최적화
+2. **멀티스레딩**: 병렬 처리를 통한 처리 속도 향상
+3. **배치 삽입**: 데이터베이스 삽입 작업을 일괄 처리하여 IO 최소화
+4. **Connection Pool**: HikariCP를 통한 데이터베이스 연결 관리****
 
 # 실행방법
 1) git clone 
@@ -55,6 +53,14 @@
 3) src/main/resource/schema/schema.sql 에 있는 쿼리 실행해서 테이블 생성.
 4) 환경변수 : test로 설정
 5) src/main/java/danal/batch/restaurant/RestaurantSpringBatchApplication 스타트
+6) application-test.yml  input csv 파일명 물리경로 변경필요
+   ```yml
+danal:
+  batch:  
+    chunk-size: 1000
+      input:
+          csv-file: C:\Users\차승연\Downloads\07_24_04_P_CSV\fulldata_07_24_04_P_일반음식점.csv  #  csv-file: data/csv/restaurant_temp_data.csv # 동적인 파일명을 받기 위해 주석처리. 잡 파라미터로 처리
+```
 
 6) ![스타터 확인](./img/intellij%20실행.png)
 

@@ -40,7 +40,7 @@ public class RestaurantDataLoaderStep {
 
     private final CustomStepExecutionListener stepExecutionListener;
 
-    private final static int GRID_SIZE = 5;
+    private final static int GRID_SIZE = 10;
 
     @Qualifier(BatchConstStrings.TASK_EXECUTOR)
     private final TaskExecutor taskExecutor;

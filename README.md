@@ -41,11 +41,10 @@
 ```
 
 ## 성능 최적화
-이 애플리케이션은 다음과 같은 방법으로 성능을 최적화했습니다:
-1. **청크 기반 처리**: 큰 데이터셋을 작은 청크로 나누어 처리하여 메모리 사용 최적화
-2. **멀티스레딩**: 병렬 처리를 통한 처리 속도 향상
-3. **배치 삽입**: 데이터베이스 삽입 작업을 일괄 처리하여 IO 최소화
-4. **Connection Pool**: HikariCP를 통한 데이터베이스 연결 관리****
+1. 청크 기반 처리: 큰 데이터셋을 작은 청크로 나누어 처리하여 메모리 사용 최적화
+2. 멀티스레딩*: 병렬 처리를 통한 처리 속도 향상
+3. 배치 삽입: 데이터베이스 삽입 작업을 일괄 처리하여 IO 최소화
+4. Connection Pool: HikariCP를 통한 데이터베이스 연결 관리****
 
 # 실행방법
 1) git clone 
@@ -54,7 +53,8 @@
 4) 환경변수 : test로 설정
 5) src/main/java/danal/batch/restaurant/RestaurantSpringBatchApplication 스타트
 6) application-test.yml  input csv 파일명 물리경로 변경필요
-   ```yml
+
+ ```yml
 danal:
   batch:  
     chunk-size: 1000
@@ -62,7 +62,7 @@ danal:
           csv-file: C:\Users\차승연\Downloads\07_24_04_P_CSV\fulldata_07_24_04_P_일반음식점.csv  #  csv-file: data/csv/restaurant_temp_data.csv # 동적인 파일명을 받기 위해 주석처리. 잡 파라미터로 처리
 ```
 
-6) ![스타터 확인](./img/intellij%20실행.png)
+![스타터 확인](./img/intellij%20실행.png)
 
 
 # Mysql local 기동
